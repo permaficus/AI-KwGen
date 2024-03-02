@@ -8,8 +8,9 @@ const httpServer: Express = express();
 const serverInit = () => {
     httpServer.use(express.urlencoded({ extended: true }));
     httpServer.use(express.json());
+    httpServer.use(express.text());
     httpServer.use(cors());
-    httpServer.use('v1', v1)
+    httpServer.use('/v1', v1)
 }
 
 export { serverInit, httpServer, NODE_ENV, SERVICE_LOCAL_PORT }
