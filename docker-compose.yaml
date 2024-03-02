@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  ai-kwgen:
+    container_name: ai-kwgen
+    network_mode: lefina-dev
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app/ai-keyword-generator
+    restart: always
+    ports:
+      - 2188:2188
+    environment:
+      - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
+    command: npm start
