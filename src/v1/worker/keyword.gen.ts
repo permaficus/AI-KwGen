@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { chatGpt } from "../../libs/openai.utils";
+import { v4 as ObjectId } from 'uuid';
 
 export const generateKeywords = async (req: Request, res: Response) => {
     try {        
@@ -16,11 +17,24 @@ export const generateKeywords = async (req: Request, res: Response) => {
             frequency_penalty: 0,
             presence_penalty: 0,
         })
-        const response: any = stream.choices[0].message.content.split('\n')
+        let response: any = stream.choices[0].message.content.split('\n')
+        let newResponse: any = []
+        if (response.length === 1) {
+            response = response[0].split(', ')
+        }
+        response.map((e: any) => {
+            newResponse = [
+                ...newResponse,
+                {
+                    id: ObjectId(),
+                    keyword: e.replace(/^[0-9.-]+/g, '').trim()
+                }
+            ]
+        })
         res.status(200).json({
             status: 'OK',
             code: 200,
-            data: response.map((e: any) => e.replace(/^[0-9.-]+/g, '').trim())
+            data: newResponse
         })
         res.end();
     } catch (error: any) {
